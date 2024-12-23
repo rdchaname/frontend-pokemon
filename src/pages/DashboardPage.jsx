@@ -74,7 +74,7 @@ const DashboardPage = () => {
         };
         fetchData();
       } catch (error) {
-        setAlert({ type: "danger", message: "Error al registrar el Pokémon." });
+        setAlert({ type: "danger", message: error });
       } finally {
         setLoading(false);
         setTimeout(() => setAlert(null), 3000); // Ocultar alerta después de 3 segundos
@@ -85,7 +85,7 @@ const DashboardPage = () => {
   return (
     <div className="container mt-4">
       <h1 className="mb-4">Listado de Pokémon desde base de datos local</h1>
-      <h4 className="mb-4">Cantidad de pokemones {totalCount}</h4>
+      <h4 className="mb-4">Cantidad de pokemones: {totalCount}</h4>
       {/* Mensaje de alerta */}
       {alert && (
         <div className={`alert alert-${alert.type}`} role="alert">

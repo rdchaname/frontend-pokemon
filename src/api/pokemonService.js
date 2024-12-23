@@ -84,3 +84,44 @@ export const eliminarPokemon = async (id) => {
         throw error;
     }
 };
+
+
+export const obtenerCantidadTotal = async () => {
+    try {
+        const response = await api.get(`/pokemon/obtenerCantidadTotal`);
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtenerCantidadTotal del API:", error);
+        throw error;
+    }
+};
+
+export const obtenerCantidadPorTipo = async () => {
+    try {
+        const response = await api.get(`/pokemon/obtenerCantidadPorTipo`);
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtenerCantidadPorTipo del API:", error);
+        throw error;
+    }
+};
+
+export const obtenerPromedioPoderCombate = async () => {
+    try {
+        const response = await api.get(`/pokemon/obtenerPromedioPoderCombate`);
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtenerPromedioPoderCombate del API:", error);
+        throw error;
+    }
+};
+
+export const obtenerTipos = async () => {
+    try {
+        const response = await api.get(`/pokemon/obtenerTipos`);
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtenerTipos del API:", error);
+        throw error;
+    }
+};

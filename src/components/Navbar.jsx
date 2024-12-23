@@ -10,6 +10,7 @@ const Navbar = () => {
         { label: "Inicio", path: "/" },
         { label: "PokeAPI", path: "/poke-api" },
         { label: "Registrar", path: "/registrar-pokemon" },
+        { label: "Estadísticas", path: "/estadisticas" },
     ];
 
     const handleLogout = () => {
