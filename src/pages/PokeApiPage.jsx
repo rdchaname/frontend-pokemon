@@ -7,7 +7,7 @@ import { sincronizar } from "../api/pokemonService";
 const PokeApiPage = () => {
 
   const [pokemons, setPokemons] = useState([]);
-  const [totalCount, setTotalCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(1302);
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 20;
   const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ const PokeApiPage = () => {
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       } finally {
-        setLoading(false); // Desactivar el estado de carga
+        setLoading(false);
       }
     };
 
@@ -34,7 +34,7 @@ const PokeApiPage = () => {
   const totalPages = Math.ceil(totalCount / limit);
 
   const generatePageNumbers = () => {
-    const maxButtons = 5; // Número máximo de botones visibles
+    const maxButtons = 5;
     const startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
     const endPage = Math.min(totalPages, startPage + maxButtons - 1);
 

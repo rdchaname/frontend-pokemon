@@ -26,9 +26,9 @@ export const obtenerPokemon = async (id) => {
 };
 
 
-export const listarTodos = async (numeroPagina, cantidadPorPagina) => {
+export const listarTodos = async (numeroPagina, cantidadPorPagina, busqueda, tipo) => {
     try {
-        const response = await api.get(`/pokemon`, { params: { numeroPagina, cantidadPorPagina } });
+        const response = await api.get(`/pokemon`, { params: { numeroPagina, cantidadPorPagina, busqueda, tipo} });
         return response.data;
     } catch (error) {
         console.error("Error al obtener datos de la API:", error);

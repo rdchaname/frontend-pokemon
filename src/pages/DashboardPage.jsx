@@ -1,32 +1,38 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { BsFillPencilFill, BsFillTrash3Fill } from "react-icons/bs";
-import { eliminarPokemon, listarTodos } from "../api/pokemonService";
+import { eliminarPokemon, listarTodos, obtenerTipos } from "../api/pokemonService";
 import { useNavigate } from "react-router-dom";
 
 const DashboardPage = () => {
 
   const [pokemons, setPokemons] = useState([]);
+  const [tipos, setTipos] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [busqueda, setBusqueda] = useState('');
+  const [tipo, setTipo] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const cantidadPorPagina = 20;
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [alert, setAlert] = useState(null); // Mensajes de alerta
+  const [alert, setAlert] = useState(null);
 
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
       try {
-        const data = await listarTodos(currentPage, cantidadPorPagina);
+        const data = await listarTodos(currentPage, cantidadPorPagina, busqueda, tipo);
+        const dataTipos = await obtenerTipos();
         const listado = data.value.data;
         const cantidad = data.value.total;
+        const listadoTipo = dataTipos.value;
         setPokemons(listado);
         setTotalCount(cantidad);
+        setTipos(listadoTipo);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       } finally {
-        setLoading(false); // Desactivar el estado de carga
+        setLoading(false);
       }
     };
 
@@ -36,7 +42,7 @@ const DashboardPage = () => {
   const totalPages = Math.ceil(totalCount / cantidadPorPagina);
 
   const generatePageNumbers = () => {
-    const maxButtons = 5; // Número máximo de botones visibles
+    const maxButtons = 5;
     const startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
     const endPage = Math.min(totalPages, startPage + maxButtons - 1);
 
@@ -45,6 +51,10 @@ const DashboardPage = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
+  };
+
+  const handleNuevoPokemon = () => {
+    navigate("/registrar-pokemon");
   };
 
   const handleEditarPokemon = (id) => {
@@ -82,10 +92,45 @@ const DashboardPage = () => {
     }
   };
 
+  const handleSearchChange = (event) => {
+    setBusqueda(event.target.value);
+  };
+
+  const handleSelectChange = (event) => {
+    setTipo(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setBusqueda(busqueda);
+    setTipo(tipo);
+
+    const fetchData = async () => {
+      try {
+        const data = await listarTodos(currentPage, cantidadPorPagina, busqueda, tipo);
+        const dataTipos = await obtenerTipos();
+        const listado = data.value.data;
+        const cantidad = data.value.total;
+        const listadoTipo = dataTipos.value;
+        setPokemons(listado);
+        setTotalCount(cantidad);
+        setTipos(listadoTipo);
+      } catch (error) {
+        console.error("Error al cargar los datos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+
+  };
+
   return (
     <div className="container mt-4">
       <h1 className="mb-4">Listado de Pokémon desde base de datos local</h1>
       <h4 className="mb-4">Cantidad de pokemones: {totalCount}</h4>
+      <h4 className="mb-4"><button className="btn btn-success" type="button" onClick={() => handleNuevoPokemon()}>Nuevo</button></h4>
       {/* Mensaje de alerta */}
       {alert && (
         <div className={`alert alert-${alert.type}`} role="alert">
@@ -103,6 +148,49 @@ const DashboardPage = () => {
         </div>
       ) : (
         <>
+          <div className="row">
+            <div className="col-12">
+              <form onSubmit={handleSubmit} className="d-flex flex-column">
+                {/* Caja de búsqueda */}
+                <div className="mb-3">
+                  <label htmlFor="search" className="form-label">
+                    Buscar
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="search"
+                    value={busqueda}
+                    onChange={handleSearchChange}
+                    placeholder="Introduce un término de búsqueda"
+                  />
+                </div>
+
+                {/* Select */}
+                <div className="mb-3">
+                  <label htmlFor="select" className="form-label">
+                    Selecciona una opción
+                  </label>
+                  <select
+                    className="form-select"
+                    id="select"
+                    value={tipo}
+                    onChange={handleSelectChange}
+                  >
+                    <option value="">Todos...</option>
+                    {
+                      tipos.map((tipo, index) => (<option key={index} value={tipo}>{tipo}</option>))
+                    }
+                  </select>
+                </div>
+
+                {/* Botón de envío */}
+                <button type="submit" className="btn btn-primary">
+                  Buscar
+                </button>
+              </form>
+            </div>
+          </div>
           <div className="table-responsive">
             <table className="table table-striped">
               <thead>
@@ -119,19 +207,19 @@ const DashboardPage = () => {
               <tbody>
                 {pokemons.map((pokemon, index) => (
                   <tr key={index}>
-                    <td>{(currentPage - 1) * cantidadPorPagina + index + 1}</td>
-                    <td>{pokemon.nombre}</td>
-                    <td>{pokemon.tipo}</td>
-                    <td>{pokemon.poderCombate}</td>
-                    <td>{pokemon.fechaCaptura}</td>
-                    <td>
+                    <td className="align-middle">{(currentPage - 1) * cantidadPorPagina + index + 1}</td>
+                    <td className="align-middle">{pokemon.nombre}</td>
+                    <td className="align-middle">{pokemon.tipo}</td>
+                    <td className="align-middle">{pokemon.poderCombate}</td>
+                    <td className="align-middle">{pokemon.fechaCaptura}</td>
+                    <td className="align-middle">
                       {
                         pokemon.imagen ? (<img src={`http://localhost:5091/${pokemon.imagen}`} width={"100px"} />) : 'no hay imagen'
                       }
                     </td>
-                    <td>
-                      <button type="button" onClick={() => handleEditarPokemon(pokemon.id)} className="btn btn-sm btn-warning mx-2"><BsFillPencilFill />Editar</button>
-                      <button type="button" onClick={() => handleEliminarPokemon(pokemon.id)} className="btn btn-sm btn-danger"><BsFillTrash3Fill />Eliminar</button>
+                    <td className="align-middle">
+                      <button type="button" onClick={() => handleEditarPokemon(pokemon.id)} className="btn btn-warning mx-2"><BsFillPencilFill className="mx-1" />Editar</button>
+                      <button type="button" onClick={() => handleEliminarPokemon(pokemon.id)} className="btn btn-danger"><BsFillTrash3Fill className="mx-1" />Eliminar</button>
                     </td>
                   </tr>
                 ))}

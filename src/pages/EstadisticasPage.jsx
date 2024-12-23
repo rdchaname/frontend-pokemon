@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { obtenerCantidadPorTipo, obtenerCantidadTotal, obtenerPromedioPoderCombate, obtenerTipos } from "../api/pokemonService";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie } from "react-chartjs-2";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const EstadisticasPage = () => {
+    const [graficoData, setGraficoData] = useState([]);
     const [estadisticas, setEstadisticas] = useState({
         total: 0,
         promedioPoderCombate: 0,
@@ -24,6 +29,7 @@ const EstadisticasPage = () => {
                     tipos: dataTipos.value,
                     totalPorTipo: dataTotalPorTipo.value
                 })
+                setGraficoData(dataTotalPorTipo.value);
 
             } catch (error) {
                 console.error("Error al cargar las estadísticas:", error);
@@ -34,6 +40,26 @@ const EstadisticasPage = () => {
 
         fetchEstadisticas();
     }, []);
+
+    function generateRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    const chartData = {
+        labels: graficoData.map((item) => item.Nombre), // Extraemos los tipos de la data
+        datasets: [
+            {
+                data: graficoData.map((item) => item.Cantidad), // Extraemos las cantidades
+                backgroundColor: graficoData.map(() => generateRandomColor()), // Colores para los segmentos
+                hoverBackgroundColor: graficoData.map(() => generateRandomColor()), // Colores al hacer hover
+            },
+        ],
+    };
 
     return (
         <div className="container mt-4">
@@ -83,6 +109,17 @@ const EstadisticasPage = () => {
                                                 </li>
                                             ))}
                                         </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* Card 3: Grafico Cantidad por Tipo */}
+                        <div className="col-md-4">
+                            <div className="card mb-3">
+                                <div className="card-header">Cantidad por Tipo</div>
+                                <div className="card-body">
+                                    <div className="mb-3">
+                                        <Pie data={chartData} />
                                     </div>
                                 </div>
                             </div>
