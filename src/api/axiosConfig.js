@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import URL_BACKEND from '../config';
+import { URL_BACKEND_API } from '../config';
 
 const api = axios.create({
-    baseURL: URL_BACKEND,
+    baseURL: URL_BACKEND_API,
     headers: {
         'Content-Type': 'application/json',
     },

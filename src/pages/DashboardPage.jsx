@@ -3,7 +3,7 @@ import { useState } from "react";
 import { BsFillPencilFill, BsFillTrash3Fill } from "react-icons/bs";
 import { eliminarPokemon, listarTodos, obtenerTipos } from "../api/pokemonService";
 import { useNavigate } from "react-router-dom";
-import URL_BACKEND from '../config';
+import { URL_BACKEND } from "../config";
 
 const DashboardPage = () => {
 
@@ -68,7 +68,7 @@ const DashboardPage = () => {
       try {
         setLoading(true);
         const result = await eliminarPokemon(id);
-        setAlert({ type: "success", message: result.message || "Registro exitoso." });
+        setAlert({ type: "success", message: result.message || "Se eliminó correctamente el pokemon." });
 
         const fetchData = async () => {
           try {
