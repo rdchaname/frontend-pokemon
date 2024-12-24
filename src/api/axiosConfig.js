@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import URL_BACKEND from '../config';
 
 const api = axios.create({
-    baseURL: 'https://cibertecpokemonapiapi20241223140157.azurewebsites.net/api',
+    baseURL: URL_BACKEND,
     headers: {
         'Content-Type': 'application/json',
     },

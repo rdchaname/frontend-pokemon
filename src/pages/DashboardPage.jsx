@@ -3,6 +3,7 @@ import { useState } from "react";
 import { BsFillPencilFill, BsFillTrash3Fill } from "react-icons/bs";
 import { eliminarPokemon, listarTodos, obtenerTipos } from "../api/pokemonService";
 import { useNavigate } from "react-router-dom";
+import URL_BACKEND from '../config';
 
 const DashboardPage = () => {
 
@@ -214,7 +215,7 @@ const DashboardPage = () => {
                     <td className="align-middle">{pokemon.fechaCaptura}</td>
                     <td className="align-middle">
                       {
-                        pokemon.imagen ? (<img src={`https://cibertecpokemonapiapi20241223140157.azurewebsites.net/${pokemon.imagen}`} width={"100px"} />) : 'no hay imagen'
+                        pokemon.imagen ? (<img src={`${URL_BACKEND}/${pokemon.imagen}`} width={"100px"} />) : 'no hay imagen'
                       }
                     </td>
                     <td className="align-middle">
